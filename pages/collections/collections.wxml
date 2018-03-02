@@ -1,0 +1,6 @@
+<scroll-view scroll-y class="container">
+	<view wx:for="{{collections}}" wx:for-item="item">
+		<view wx:if="{{item.char}}" class="tip">{{item.char}}</view>
+		<navigator open-type="navigate" url="../show/show?id={{item.id}}&collectionType={{title}}&season={{season}}&cname={{item.name}}">{{item.name}}</navigator>
+	</view>
+</scroll-view>

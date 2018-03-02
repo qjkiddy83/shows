@@ -1,0 +1,17 @@
+<!--index.wxml-->
+<scroll-view class="section" scroll-y bindscrolltolower="scrolltolower">
+  <view class="tip">{{season}} <text>{{collectionType}}</text></view>
+  <view class="imageview" wx:for="{{imgs}}" wx:for-item="item" >
+    <image bindtap="imageView" data-src="{{item.image}}" style="height:{{imgH}}px" mode="scaleToFill" src="{{item.image}}"></image>
+  </view>
+</scroll-view>
+<view class="layer" style="display: {{layerShow}}">
+	<view class="h1">FASHION SHOWS</view>
+	<view wx:for="{{cates}}" wx:for-item="item" data-type="{{item}}" bindtap="cateTap">
+		{{item}}
+	</view>
+</view>
+<view class="bbar {{searchIcon}}" bindtap="showSeach">
+	<icon type="menu" size="20" color="white"/>
+	<icon type="clear" size="40" color="white"/>
+</view>

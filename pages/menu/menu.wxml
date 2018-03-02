@@ -1,0 +1,5 @@
+<scroll-view scroll-y class="container">
+	<view wx:for="{{catelist}}" wx:for-item="item" >
+		<navigator url="../collections/collections?cateid={{item.id}}&collectionTypeCode={{type}}&title={{item.typename}} {{item.yearname}}" open-type="navigate">{{item.typename}} {{item.yearname}}</navigator>
+	</view>
+</scroll-view>

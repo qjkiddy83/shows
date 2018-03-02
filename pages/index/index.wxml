@@ -1,0 +1,18 @@
+<!--index.wxml-->
+<scroll-view class="section" scroll-y bindscroll="scroll" bindscrolltolower="scrolltolower">
+  <view class="imageview" wx:for="{{imgs}}" wx:for-item="item" bindtap='redirect' data-title="{{item.type}} {{item.year}}" data-typeCollection="{{item.typeCollection}}" data-name="{{item.name}}" data-id='{{item.id}}'>
+    <view class="tip" wx:if="{{item.tip}}">{{item.typeCollection}} <text>{{item.type}} {{item.year}}</text></view>
+    <image style="height:{{imgH}}px" mode="scaleToFill" src="{{item.images[0]}}"></image>
+    <text class="name {{item.namecls}}">{{item.name}}</text>
+  </view>
+</scroll-view>
+<view class="layer" style="display: {{layerShow}}">
+	<view class="h1">FASHION SHOWS</view>
+	<view wx:for="{{cates}}" wx:for-item="item" data-type="{{item}}" bindtap="cateTap">
+		{{item}}
+	</view>
+</view>
+<view class="bbar {{searchIcon}}" bindtap="showSeach">
+	<icon type="menu" size="20" color="white"/>
+	<icon type="clear" size="40" color="white"/>
+</view>
