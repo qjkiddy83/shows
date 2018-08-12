@@ -1,0 +1,8 @@
+<block wx:if="{{collection_show}}">
+  <scroll-view scroll-y class="container">
+    <view class='clview' wx:for="{{collections}}" wx:for-item="item">
+      <view wx:if="{{item.char}}" class="tip">{{item.char}}</view>
+      <view bindtap='toShowPage' data-url="../show/show?id={{item.id}}&collectionType={{title}}&season={{season}}&cname={{item.name}}">{{item.name}}</view>
+    </view>
+  </scroll-view>
+</block>

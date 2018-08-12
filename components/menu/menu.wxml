@@ -1,0 +1,16 @@
+<view class="layer" style="display: {{layerShow}}">
+	<view class="h1">FASHION SHOWS</view>
+	<view wx:for="{{cates}}" wx:for-item="item" data-type="{{item}}" bindtap="cateTap">
+		{{item}}
+	</view>
+</view>
+<scroll-view scroll-y class="container" wx:if="{{menushow}}">
+	<view class='menuview' wx:for="{{catelist}}" wx:for-item="item" >
+		<view data-cateid="{{item.id}}" data-collectionTypeCode="{{type}}" data-title="{{item.typename}} {{item.yearname}}" bindtap='toCollections'>{{item.typename}} {{item.yearname}}</view>
+	</view>
+</scroll-view>
+<collections id="collections" bindcloselayer="closeLayer"></collections>
+<view class="bbar {{searchIcon}}" bindtap="showSeach">
+	<icon type='menu' class="menu" size="20" color="white"/>
+	<icon type='clear' class="clear" size="40" color="white"/>
+</view>

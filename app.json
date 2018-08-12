@@ -1,14 +1,13 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
-    "pages/menu/menu",
-    "pages/collections/collections",
-    "pages/show/show"
+    "pages/show/show",
+    "pages/my/my"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#000",
     "navigationBarTitleText": "The Last Fashion Shows",
-    "navigationBarTextStyle":"#fff"
+    "navigationBarTextStyle": "#fff"
   }
 }

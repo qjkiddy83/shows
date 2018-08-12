@@ -1,0 +1,14 @@
+<scroll-view class="section" scroll-y bindscrolltolower="scrolltolower">
+  <block wx:for="{{imgs}}" wx:for-item="item">
+    <view class="imageview" catchtap='redirect' data-title="{{item.faved.title}}" data-typeCollection="{{item.faved.typecollection}}" data-name="{{item.faved.name}}" data-id='{{item.faved.id}}' data-img="{{item.faved.img}}" bindlongpress="longpress">
+      <view class="tip" wx:if="{{item.tip}}">{{item.faved.typecollection}}
+        <text>{{item.type}} {{item.year}}</text>
+      </view>
+      <image mode="scaleToFill" style="height:{{imgH}}px" src="{{item.faved.img}}"></image>
+      <text class="name">{{item.faved.name}}</text>
+    </view>
+    <block wx:if="{{index==1||index==6}}">
+      <ad unit-id="adunit-d42693069cc4c025"></ad>
+    </block>
+  </block>
+</scroll-view>

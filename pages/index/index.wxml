@@ -1,18 +1,23 @@
 <!--index.wxml-->
-<scroll-view class="section" scroll-y bindscroll="scroll" bindscrolltolower="scrolltolower">
-  <view class="imageview" wx:for="{{imgs}}" wx:for-item="item" bindtap='redirect' data-title="{{item.type}} {{item.year}}" data-typeCollection="{{item.typeCollection}}" data-name="{{item.name}}" data-id='{{item.id}}'>
-    <view class="tip" wx:if="{{item.tip}}">{{item.typeCollection}} <text>{{item.type}} {{item.year}}</text></view>
-    <image style="height:{{imgH}}px" mode="scaleToFill" src="{{item.images[0]}}"></image>
-    <text class="name {{item.namecls}}">{{item.name}}</text>
-  </view>
+<scroll-view class="section" scroll-y bindscroll="scroll" lower-threshold="300" bindscrolltolower="scrolltolower">
+  <block wx:for="{{imgs}}" wx:for-item="item" wx:for-index="index">
+    <view class="imageview" catchtap='redirect' data-title="{{item.type}} {{item.year}}" data-typeCollection="{{item.typeCollection}}" data-name="{{item.name}}" data-id='{{item.id}}' data-img="{{item.images[0]}}" bindlongpress="longpress">
+      <!-- <view class="tip" wx:if="{{item.tip}}">{{item.typeCollection}}
+      <text>{{item.type}} {{item.year}}</text>
+    </view> -->
+      <image style="height:{{imgH}}px" mode="scaleToFill" src="{{item.images[0]}}"></image>
+      <text class="name {{item.namecls}}">{{item.name}}</text>
+      <view class='iconfont icon-love {{oLoved[item.id]?"loved":""}}' catchtap='love' data-title="{{item.type}} {{item.year}}" data-typeCollection="{{item.typeCollection}}" data-name="{{item.name}}" data-id='{{item.id}}' data-img="{{item.images[0]}}" wx:if="{{authed}}"></view>
+      <view class='iconfont icon-love {{oLoved[item.id]?"loved":""}}' catchtap='prevent' wx:if="{{!authed}}">
+        <button open-type='getUserInfo' bindgetuserinfo="bindGetUserInfo" data-title="{{item.type}} {{item.year}}" data-typeCollection="{{item.typeCollection}}" data-name="{{item.name}}" data-id='{{item.id}}' data-img="{{item.images[0]}}"></button>
+      </view>
+    </view>
+    <block wx:if="{{index==0||index==5||index==10}}">
+      <ad unit-id="adunit-b11ae0326eac03e8"></ad>
+    </block>
+  </block>
 </scroll-view>
-<view class="layer" style="display: {{layerShow}}">
-	<view class="h1">FASHION SHOWS</view>
-	<view wx:for="{{cates}}" wx:for-item="item" data-type="{{item}}" bindtap="cateTap">
-		{{item}}
-	</view>
-</view>
-<view class="bbar {{searchIcon}}" bindtap="showSeach">
-	<icon type="menu" size="20" color="white"/>
-	<icon type="clear" size="40" color="white"/>
-</view>
+<navigator url='/pages/my/my' class='avatar'>
+  <image src='{{userInfo.avatarUrl}}'></image>
+</navigator>
+<menu-comp id="menu-comp"></menu-comp>

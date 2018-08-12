@@ -1,5 +1,6 @@
 //index.js
 var querys = {};
+let app = getApp();
 Page({
     data: {
         imgs: [],
@@ -9,7 +10,8 @@ Page({
         searchIcon: "",
         cates: ["READY-TO-WEAR", "COUTURE", "MENSWEAR", "BRIDAL", "PRE-FALL", "RESORT","HOME"],
         catelist: [],
-        cacheImgs: []
+        cacheImgs: [],
+        oLoved:{}
     },
     cateTap: function(e) {
         var that = this,
@@ -44,24 +46,151 @@ Page({
         })
     },
     imageView: function(e) {
-        var urls = [];
-        this.data.imgs.forEach(function(key, i) {
-            urls.push(key.image)
-        })
-        wx.previewImage({
-            current: e.currentTarget.dataset.src, // 当前显示图片的http链接
-            urls: urls // 需要预览的图片http链接列表
-        })
+        // var urls = [];
+        // this.data.imgs.forEach(function(key, i) {
+        //     urls.push(key.image)
+        // })
+        // wx.previewImage({
+        //     current: e.currentTarget.dataset.src, // 当前显示图片的http链接
+        //     urls: urls // 需要预览的图片http链接列表
+        // })
     },
     scrolltolower: function() {
         if (!this.data.cacheImgs.length) return;
         this.setData({ imgs: this.data.imgs.concat(this.data.cacheImgs.splice(0, 10)) })
     },
+    getloved: function () {
+      wx.request({
+        url: 'https://node.jsers.cn/collections/interface/getloved',
+        method: "GET",
+        data: {
+          userid: this.data.userInfo.id
+        },
+        success: function (res) {
+          let oLoved = {};
+          res.data.data.forEach(item => {
+            oLoved[item.favid] = 1;
+          })
+          this.setData({
+            oLoved: oLoved
+          })
+        }.bind(this)
+      })
+    },
+    bindGetUserInfo: function (e) {
+      if (e.detail.userInfo) {
+        this.login(function (res) {
+          this.setData({
+            userInfo: res,
+            authed: true
+          })
+          this.dolove(e.currentTarget.dataset);
+        }.bind(this))
+      }
+    },
+    login: function (callback) {
+      wx.login({
+        success: function (lgres) {
+          wx.getUserInfo({
+            success: function (res) {
+              wx.request({
+                url: 'https://node.jsers.cn/collections/interface/login',
+                method: "POST",
+                data: {
+                  code: lgres.code,
+                  iv: res.iv,
+                  encryptedData: res.encryptedData
+                },
+                success: function (ret) {
+                  app.globalData.userInfo = ret.data.data;
+                  callback(ret.data.data)
+                }
+              })
+            }
+          })
+        }
+      })
+    },
+    prevent: function () {
+
+    },
+    dolove: function (dataset) {
+      let cate = this.data.imgs[dataset.index];
+      wx.request({
+        url: 'https://node.jsers.cn/collections/interface/dolove',
+        method: "POST",
+        data: {
+          userid: this.data.userInfo.id,
+          favid: dataset.id,
+          fav: JSON.stringify(dataset)
+        },
+        success: function (res) {
+          if (res.data) {
+            let _oloved = this.data.oLoved;
+            _oloved[dataset.id] = 1;
+            this.setData({
+              oLoved: _oloved
+            })
+          }
+        }.bind(this)
+      })
+    },
+    love: function (e) {
+      if (this.data.oLoved[e.currentTarget.dataset.id]) {//delete love
+        this.donotLove(e.currentTarget.dataset.id)
+        return;
+      }
+      if (this.data.userInfo.id) {
+        this.dolove(e.currentTarget.dataset);
+      } else {
+        this.login(function (res) {
+          this.dolove(e.currentTarget.dataset);
+        }.bind(this))
+      }
+    },
+    donotLove: function (favid) {
+      wx.request({
+        url: 'https://node.jsers.cn/collections/interface/rmlove',
+        method: "POST",
+        data: {
+          userid: this.data.userInfo.id,
+          favid: favid
+        },
+        success: function (res) {
+          if (res.data) {
+            let _oloved = this.data.oLoved;
+            _oloved[favid] = 0;
+            this.setData({
+              oLoved: _oloved
+            })
+          }
+        }.bind(this)
+      })
+    },
     onLoad: function(options) {
+      console.log(options)
         var that = this;
+        app.loginReadyCallback = function (userinfo) {
+          if (!this.data.userInfo)
+            this.setData({
+              userInfo: userinfo.data,
+              authed: true
+            });
+
+          this.getloved();
+        }.bind(this)
+        this.setData({
+          userInfo: app.globalData.userInfo,
+          authed: app.globalData.authed
+        });
+        if (app.globalData.userInfo) {
+          this.getloved();
+        }
         querys = options;
 
         this.setData({
+            id:options.id,
+            name: decodeURIComponent(options.cname),
             collectionType: decodeURIComponent(options.collectionType),
             season: decodeURIComponent(options.season)
         })
@@ -100,5 +229,13 @@ Page({
             })),
             url: '/pages/show/show?' + qstr.join("&")
         }
+    },
+    onUnload: function(){
+      let pages = getCurrentPages();
+      pages.forEach(page =>{
+        if(page.route == "pages/index/index"){
+          page.getloved();
+        }
+      })
     }
 })

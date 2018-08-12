@@ -1,17 +1,23 @@
 <!--index.wxml-->
 <scroll-view class="section" scroll-y bindscrolltolower="scrolltolower">
-  <view class="tip">{{season}} <text>{{collectionType}}</text></view>
-  <view class="imageview" wx:for="{{imgs}}" wx:for-item="item" >
-    <image bindtap="imageView" data-src="{{item.image}}" style="height:{{imgH}}px" mode="scaleToFill" src="{{item.image}}"></image>
+  <view class="tip">{{season}}
+    <text>{{collectionType}}</text>
   </view>
+  <block wx:for="{{imgs}}" wx:for-item="item">
+    <view class="imageview">
+      <image bindtap="imageView" data-src="{{item.image}}" style="height:{{imgH}}px" mode="scaleToFill" src="{{item.image}}"></image>
+    </view>
+    <block wx:if="{{index==1||index==6}}">
+      <ad unit-id="adunit-f6a80ead1e77ea1e"></ad>
+    </block>
+  </block>
 </scroll-view>
-<view class="layer" style="display: {{layerShow}}">
-	<view class="h1">FASHION SHOWS</view>
-	<view wx:for="{{cates}}" wx:for-item="item" data-type="{{item}}" bindtap="cateTap">
-		{{item}}
-	</view>
+<view class='iconfont icon-love {{oLoved[id]?"loved":""}}' catchtap='love' data-title="{{collectionType}}" data-typeCollection="{{season}}" data-name="{{name}}" data-id='{{id}}' data-img="{{imgs[0].image}}" wx:if="{{authed}}"></view>
+<view class='iconfont icon-love {{oLoved[id]?"loved":""}}' catchtap='prevent' wx:if="{{!authed}}">
+  <button open-type='getUserInfo' bindgetuserinfo="bindGetUserInfo" data-title="{{collectionType}}" data-typeCollection="{{season}}" data-name="{{name}}" data-id='{{id}}' data-img="{{imgs[0].image}}"></button>
 </view>
-<view class="bbar {{searchIcon}}" bindtap="showSeach">
-	<icon type="menu" size="20" color="white"/>
-	<icon type="clear" size="40" color="white"/>
-</view>
+
+<navigator url='/pages/my/my' class='avatar'>
+  <image src='{{userInfo.avatarUrl}}'></image>
+</navigator>
+<menu-comp id="menu-comp"></menu-comp>
